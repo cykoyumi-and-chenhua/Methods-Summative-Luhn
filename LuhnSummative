@@ -62,14 +62,18 @@ class CustomerSystem{
     * Discription: Method validates Credit Card number using Luhn Algorithm
     * 
     * @param: int num *Credit Card Number*
-    * @return/output: The Credit Card information is valid / The Credit Card Information is not valid
+    * @return/output: Boolean true/false
     */
-    public static void validateCreditCard(String num){
+    public static boolean validateCreditCard(String num){
         // Sums 
         int sum1 =0, sum2 =0;
         // Length of Credit Card Number
         int digits = num.length();
 
+        // There must be aleast 9 digits in the Credit Card
+        if (digits < 9) {
+            return false;
+        }
         // Used to reverse the Credit Card Number
         String reverseNum ="";
         
@@ -112,10 +116,10 @@ class CustomerSystem{
         
         // Validation statement
         if (totalsum%10 == 0) {
-            System.out.println("The Credit Card information is valid");
+            return true;
         } 
         else {
-            System.out.println("The Credit Card Information is not valid");
+            return false;
         }
     }
 
