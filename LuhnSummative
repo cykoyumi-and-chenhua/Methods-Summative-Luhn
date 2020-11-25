@@ -15,8 +15,15 @@ class CustomerSystem{
         exitCondition = "9";
 
         // More variables for the main may be declared in the space below
-
-
+        String fileName, firstName, lastName, postal, creditNo, location;
+        int id = 1;
+        fileName ="";
+        firstName ="";
+        lastName ="";
+        postal ="";
+        creditNo ="";
+        location ="";
+    
         do{
             printMenu();                                    // Printing out the main menu
             userInput = reader.nextLine();                  // User selection from the menu
@@ -27,12 +34,19 @@ class CustomerSystem{
             }
             else if (userInput.equals(generateCustomerOption)) {
                 // Only the line below may be editted based on the parameter list and how you design the method return
-                generateCustomerDataFile();
+                
+                System.out.print("Please enter your file location : ");
+                location = reader.nextLine();
+
+                System.out.print("Please enter your file name : ");
+                fileName = reader.nextLine();
+                
+                generateCustomerDataFile(id,location, fileName,firstName, lastName, postal, creditNo);
             }
             else{
                 System.out.println("Please type in a valid option (A number from 1-9)");
             }
-
+            id++;
         } while (!userInput.equals(exitCondition));         // Exits once the user types 
 
         System.out.println("Program Terminated");
