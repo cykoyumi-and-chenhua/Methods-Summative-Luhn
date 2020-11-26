@@ -160,7 +160,7 @@ class CustomerSystem{
         
         File newFile = new File(fileName);
         //Writes file / Merges Files if there is already one created
-        PrintWriter printWriter = new PrintWriter(new FileWriter((location+fileName+fileExtension),true));
+        PrintWriter printWriter = new PrintWriter(new FileWriter((location+"/"+fileName+fileExtension),true));
         
         printWriter.println();
 
