@@ -1,6 +1,6 @@
 /*
     * Date: November 4, 2020
-    * Name: Dami Peng, Chenhua Yang
+    * Name: Dami Peng, Chenhua 
     * Description: Program Calculates the Diver points based on the score and difficulty of the dive. This repeats 3 times, and the total score for the event is totalled.
     *
     *
@@ -35,6 +35,8 @@ class CustomerSystem {
         location ="";
         userInput ="";
         String infoArray[] = {firstName, lastName, location, postal, creditNo};
+
+        // New File 
         File customer = new File("CustomerID.txt");
 
         // If created ID File Exists, read ID File
@@ -49,16 +51,20 @@ class CustomerSystem {
             if (userInput.equals(enterCustomerOption)){
                 // Only the line below may be editted based on the parameter list and how you design the method return               
                 System.out.println("Your Customer ID is: "+id);
+
+                // infoArray is equal to the user-inputted values.
                 infoArray = enterCustomerInfo(lastName, firstName, location, postal, creditNo);
-                //Uses Current ID for Customer.
+                // Uses Current ID for Customer.
                 updatedid= id;
                 // Every time a customer enters their information, the ID changes
                 id++;
             }
             else if (userInput.equals(generateCustomerOption)) {
                 // Only the line below may be editted based on the parameter list and how you design the method return
-                
+            
                 // Enter File information
+            
+            
                 System.out.print("Please enter your file location : ");
                 location = reader.nextLine();
 
@@ -80,6 +86,8 @@ class CustomerSystem {
         System.out.println("Program Terminated");
         reader.close();
     }
+
+
     public static void printMenu(){
         System.out.println("Customer and Sales System\n"
         .concat("1. Enter Customer Information\n")
@@ -90,38 +98,46 @@ class CustomerSystem {
         .concat("Enter menu option (1-9)\n")
         );
     }
+
     /*
-    * This method may be edited to achieve the task however you like.
-    * The method may not nesessarily be a void return type
+    *** NOT MY WORK ***
     */
     public static String[] enterCustomerInfo(String firstName,String lastName,String location, String postal,String creditNo) {
         Scanner reader = new Scanner(System.in);
     
-         System.out.println("What's your last name?");
-         lastName = reader.nextLine();
-         System.out.println("What's your first name?");
+         System.out.print("Enter your First name?: ");
          firstName = reader.nextLine();
-         System.out.println("Which city do you live in?");
+         System.out.print("Enter your Last name?: ");
+         lastName = reader.nextLine();
+         System.out.print("Enter City do you live in?: ");
          location = reader.nextLine();
-         System.out.println("What's your postal code?");
+         System.out.print("Enter your postal code?: ");
          postal = reader.nextLine();
-         System.out.println("What's your card number?");
+         System.out.print("Enter your card number?: ");
+    /*     
+         while (validatePostalCode(postal) == false) {
+            System.out.println("Your Postal Code is invalid! Please try again: ");
+            postal = reader.nextLine();
+         }
+    */
          creditNo = reader.nextLine();
          while (validateCreditCard(creditNo) == false){
-         System.out.println("Your Credit Card Number is invalid! Please try again: ");
-         creditNo = reader.nextLine();
+            System.out.println("Your Credit Card Number is invalid! Please try again: ");
+            creditNo = reader.nextLine();
          }
-         
+         // Cannot close reader or error.
         String infoArray[] = {firstName, lastName, location, postal, creditNo};
         return infoArray;
          
      }
+
     /*
     * This method may be edited to achieve the task however you like.
     * The method may not nesessarily be a void return type
     */
     public static void validatePostalCode(){
     }
+
     /*
     * Name: Dami Peng
     *
@@ -151,8 +167,16 @@ class CustomerSystem {
         // Even Numbers 
         for (int i =1; i < digits; i +=2) {
             char even = reverseNum.charAt(i);
-            // Changes String into integer
-            int evenNums = Integer.parseInt(String.valueOf(even));
+            
+            int evenNums;
+            try {
+                // Changes String into integer
+                evenNums = Integer.parseInt(String.valueOf(even));
+            }
+            // Catches if Credit Card No. is/contains a string
+            catch (NumberFormatException e ) {
+                return false;
+            }
             evenNums*=2;
 
             // Sum of double digits
@@ -203,24 +227,25 @@ class CustomerSystem {
     * Discription: Method prints Customer Information into a csv file at specified directory.
     * 
     * @param: String location, String fileName, String infoArray[]
-    * TWO of these params require user input: String location, String fileName. *
+    * TWO of these params require user input: String fileLocation, String fileName. *
     * @return/output: chicken.csv 
+    * *Write File*
     *
     * First Name|Last Name|Postal Code|Credit Card No.|
     * Dami|Peng|T0A|5500000000000004|
     */
-    public static void generateCustomerDataFile(int id,String location, String fileName, String infoArray[]) throws IOException{
+    public static void generateCustomerDataFile(int id,String fileLocation, String fileName, String infoArray[]) throws IOException{
         String headerArr[] = {"First Name", "Last Name", "Postal Code", "Credit Card No."};
 
         String fileExtension = ".csv";
         
         File newFile = new File(fileName);
-        //Writes file / Merges Files if there is already one created
-        PrintWriter printWriter = new PrintWriter(new FileWriter((location+"/"+fileName+fileExtension),true));
+        // Writes file / Merges Files if there is already one created
+        PrintWriter printWriter = new PrintWriter(new FileWriter((fileLocation+"/"+fileName+fileExtension),true));
         
 
         // Entire Section for writing in the file
-        printWriter.println();
+        
 
         printWriter.println("Customer ID: "+id);
 
@@ -231,9 +256,11 @@ class CustomerSystem {
         for (int i = 0; i < infoArray.length; i++ ) {
             printWriter.print(infoArray[i]+"|"); 
         }
-        
+        printWriter.println();
+
         printWriter.close();
     }
+
     /*******************************************************************
     *       ADDITIONAL METHODS MAY BE ADDED BELOW IF NECESSARY         *
     *******************************************************************/
@@ -244,8 +271,8 @@ class CustomerSystem {
     * Discription: Method writes unique ID text file
     * 
     * @param: int id
-    *
-    *
+    * @return/output: *Writes New File*
+    *                  
     */
     public static void WriteID(int id) throws IOException{
         String fileName = "CustomerID.txt";
@@ -265,7 +292,7 @@ class CustomerSystem {
     * Discription: Method reads unique ID text file 
     * 
     * @param: String fileID
-    *
+    * @return/output: int lastID 
     *
     */
     public static int ReadID(File fileID) throws IOException{
