@@ -1,10 +1,19 @@
+/*
+    * Date: November 4, 2020
+    * Name: Dami Peng, Chenhua Yang
+    * Description: Program Calculates the Diver points based on the score and difficulty of the dive. This repeats 3 times, and the total score for the event is totalled.
+    *
+    *
+*/
+
 import java.util.Scanner;
 // More packages may be imported in the space below
-
 import java.io.*;
 
-class CustomerSystem{
-    public static void main(String[] args) throws IOException{
+class CustomerSystem {
+    public static void main(String[] args) throws IOException {
+        
+
         // Please do not edit any of these variables
         Scanner reader = new Scanner(System.in);
         String userInput, enterCustomerOption, generateCustomerOption, exitCondition;
@@ -13,38 +22,58 @@ class CustomerSystem{
         exitCondition = "9";
 
         // More variables for the main may be declared in the space below
-        String fileName, firstName, lastName, postal, creditNo, location;
-        int id = 1;
+        int id = 0;
+        String fileName, firstName, lastName, postal, creditNo, location, fileID;
+        fileID = "CustomerID.txt";
         fileName ="";
         firstName ="";
         lastName ="";
         postal ="";
         creditNo ="";
         location ="";
-    
+        userInput ="";
+        String infoArray[] = {firstName, lastName, postal, creditNo};
+        File customer = new File("CustomerID.txt");
+
+        // If created ID File Exists, read ID File
+        if (customer.exists()) {
+            id = ReadID(customer);
+        }
+
         do{
             printMenu();                                    // Printing out the main menu
             userInput = reader.nextLine();                  // User selection from the menu
 
             if (userInput.equals(enterCustomerOption)){
                 // Only the line below may be editted based on the parameter list and how you design the method return
-                enterCustomerInfo();
+
+                // Every time a customer enters their information, the ID changes
+                id++;
+                System.out.println("Your Customer ID is: "+id);
+                enterCustomerInfo(fileName);
+
+                
             }
             else if (userInput.equals(generateCustomerOption)) {
                 // Only the line below may be editted based on the parameter list and how you design the method return
                 
+                // Enter File information
                 System.out.print("Please enter your file location : ");
                 location = reader.nextLine();
 
                 System.out.print("Please enter your file name : ");
                 fileName = reader.nextLine();
                 
-                generateCustomerDataFile(id,location, fileName,firstName, lastName, postal, creditNo);
+                generateCustomerDataFile(id,location, fileName,infoArray);
+                
             }
+            // Please enter a valid number
             else{
                 System.out.println("Please type in a valid option (A number from 1-9)");
             }
-            id++;
+            
+            // Every time it loops, the ID file is updated
+            WriteID(id);
         } while (!userInput.equals(exitCondition));         // Exits once the user types 
 
         System.out.println("Program Terminated");
@@ -64,7 +93,8 @@ class CustomerSystem{
     * This method may be edited to achieve the task however you like.
     * The method may not nesessarily be a void return type
     */
-    public static void enterCustomerInfo() {
+    public static void enterCustomerInfo(String a) {
+        System.out.println("");
     }
     /*
     * This method may be edited to achieve the task however you like.
@@ -78,13 +108,13 @@ class CustomerSystem{
     * Discription: Method validates Credit Card number using Luhn Algorithm
     * 
     * @param: int num *Credit Card Number*
-    * @return/output: Boolean true/false
+    * @return/output: The Credit Card information is valid / The Credit Card Information is not valid
     */
-    public static boolean validateCreditCard(String num){
+    public static boolean validateCreditCard(String creditNo){
         // Sums 
         int sum1 =0, sum2 =0;
         // Length of Credit Card Number
-        int digits = num.length();
+        int digits = creditNo.length();
 
         // There must be aleast 9 digits in the Credit Card
         if (digits < 9) {
@@ -95,7 +125,7 @@ class CustomerSystem{
         
         // Reverse String 
         for (int i = digits - 1; i >=0; i--) {
-            reverseNum +=(num.charAt(i));
+            reverseNum +=(creditNo.charAt(i));
         }
 
         // Even Numbers 
@@ -121,8 +151,16 @@ class CustomerSystem{
         // Odd Numbers
         for (int i = 0; i < digits; i+=2) {
             char odd = reverseNum.charAt(i);
-            // Changes String into integer
-            int oddNums = Integer.parseInt(String.valueOf(odd));
+
+            int oddNums;
+            try {
+                // Changes String into integer
+                oddNums = Integer.parseInt(String.valueOf(odd));
+            }
+            // Catches if Credit Card No. is/contains a string
+            catch (NumberFormatException e ) {
+                return false;
+            }
 
             // Adds all odd Numbers
             sum1 +=oddNums;
@@ -144,22 +182,24 @@ class CustomerSystem{
     *
     * Discription: Method prints Customer Information into a csv file at specified directory.
     * 
-    * @param: String location, String fileName, String firstName, String lastName, String postal, String creditNo
+    * @param: String location, String fileName, String infoArray[]
     * TWO of these params require user input: String location, String fileName. *
     * @return/output: chicken.csv 
     *
     * First Name|Last Name|Postal Code|Credit Card No.|
     * Dami|Peng|T0A|5500000000000004|
     */
-    public static void generateCustomerDataFile(int id,String location, String fileName, String firstName, String lastName, String postal, String creditNo) throws IOException{
+    public static void generateCustomerDataFile(int id,String location, String fileName, String infoArray[]) throws IOException{
         String headerArr[] = {"First Name", "Last Name", "Postal Code", "Credit Card No."};
-        String infoArray[] = {firstName, lastName, postal, creditNo};
+
         String fileExtension = ".csv";
         
         File newFile = new File(fileName);
         //Writes file / Merges Files if there is already one created
         PrintWriter printWriter = new PrintWriter(new FileWriter((location+"/"+fileName+fileExtension),true));
         
+
+        // Entire Section for writing in the file
         printWriter.println();
 
         printWriter.println("Customer ID: "+id);
@@ -177,4 +217,44 @@ class CustomerSystem{
     /*******************************************************************
     *       ADDITIONAL METHODS MAY BE ADDED BELOW IF NECESSARY         *
     *******************************************************************/
+
+    /*
+    * Name: Dami Peng
+    *
+    * Discription: Method writes unique ID text file
+    * 
+    * @param: int id
+    *
+    *
+    */
+    public static void WriteID(int id) throws IOException{
+        String fileName = "CustomerID.txt";
+            // Writes "CustomerID.txt"
+            File file = new File(fileName);
+            
+            // Prints ID
+            PrintWriter printWriter = new PrintWriter(fileName);
+            printWriter.println(id);
+
+            printWriter.close();
+        }
+
+    /*
+    * Name: Dami Peng
+    *
+    * Discription: Method reads unique ID text file 
+    * 
+    * @param: String fileID
+    *
+    *
+    */
+    public static int ReadID(File fileID) throws IOException{
+        // Scans file
+        Scanner scanner = new Scanner(fileID);
+
+        // Outputs saved ID
+        int lastID = scanner.nextInt();
+        scanner.close();
+        return lastID;
+    }        
 }
