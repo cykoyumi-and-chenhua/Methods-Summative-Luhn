@@ -22,7 +22,9 @@ class CustomerSystem {
         exitCondition = "9";
 
         // More variables for the main may be declared in the space below
-        int id = 0;
+        int id, updatedid;
+        id = 1;
+        updatedid=0;
         String fileName, firstName, lastName, postal, creditNo, location, fileID;
         fileID = "CustomerID.txt";
         fileName ="";
@@ -32,7 +34,7 @@ class CustomerSystem {
         creditNo ="";
         location ="";
         userInput ="";
-        String infoArray[] = {firstName, lastName, postal, creditNo};
+        String infoArray[] = {firstName, lastName, location, postal, creditNo};
         File customer = new File("CustomerID.txt");
 
         // If created ID File Exists, read ID File
@@ -45,14 +47,13 @@ class CustomerSystem {
             userInput = reader.nextLine();                  // User selection from the menu
 
             if (userInput.equals(enterCustomerOption)){
-                // Only the line below may be editted based on the parameter list and how you design the method return
-
+                // Only the line below may be editted based on the parameter list and how you design the method return               
+                System.out.println("Your Customer ID is: "+id);
+                infoArray = enterCustomerInfo(lastName, firstName, location, postal, creditNo);
+                //Uses Current ID for Customer.
+                updatedid= id;
                 // Every time a customer enters their information, the ID changes
                 id++;
-                System.out.println("Your Customer ID is: "+id);
-                enterCustomerInfo(fileName);
-
-                
             }
             else if (userInput.equals(generateCustomerOption)) {
                 // Only the line below may be editted based on the parameter list and how you design the method return
@@ -64,7 +65,7 @@ class CustomerSystem {
                 System.out.print("Please enter your file name : ");
                 fileName = reader.nextLine();
                 
-                generateCustomerDataFile(id,location, fileName,infoArray);
+                generateCustomerDataFile(updatedid,location, fileName,infoArray);
                 
             }
             // Please enter a valid number
@@ -93,9 +94,28 @@ class CustomerSystem {
     * This method may be edited to achieve the task however you like.
     * The method may not nesessarily be a void return type
     */
-    public static void enterCustomerInfo(String a) {
-        System.out.println("");
-    }
+    public static String[] enterCustomerInfo(String firstName,String lastName,String location, String postal,String creditNo) {
+        Scanner reader = new Scanner(System.in);
+    
+         System.out.println("What's your last name?");
+         lastName = reader.nextLine();
+         System.out.println("What's your first name?");
+         firstName = reader.nextLine();
+         System.out.println("Which city do you live in?");
+         location = reader.nextLine();
+         System.out.println("What's your postal code?");
+         postal = reader.nextLine();
+         System.out.println("What's your card number?");
+         creditNo = reader.nextLine();
+         while (validateCreditCard(creditNo) == false){
+         System.out.println("Your Credit Card Number is invalid! Please try again: ");
+         creditNo = reader.nextLine();
+         }
+         
+        String infoArray[] = {firstName, lastName, location, postal, creditNo};
+        return infoArray;
+         
+     }
     /*
     * This method may be edited to achieve the task however you like.
     * The method may not nesessarily be a void return type
